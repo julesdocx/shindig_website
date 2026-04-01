@@ -4,17 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>3D Carousel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Henny+Penny&display=swap" rel="stylesheet">
 <style>
     *{box-sizing:border-box;}
 body {
-  font-family: sans-serif;
-  text-align: center;
-  margin: 0;
+  font-family: "times new roman", system-ui;
+    margin: 0;
+
+    text-align: center;
   padding: 0;
   background: #fff;
   width: 100vw;
   height: 100dvh;
-  overflow: hidden;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,7 +60,7 @@ body {
         cursor:pointer;
         width:450px;
         height:450px;
-        left:50%;top:50%;
+        left:50%;top:35%;
         transform:translate(-50%,-50%);
         line-height:200px;
         font-size:96px;
@@ -289,12 +293,22 @@ body {
     bottom: 0px;
     margin: auto;
 }
+
+.info {
+    position: absolute;
+    top: 65%;
+}
+
+.info-text {
+    text-align: left;
+    padding: 0 20px;
+}
 @media (max-width: 600px) {
   .carousel_sliders {
     display: none;
   }
   .scene-clip {
-overflow: hidden;  
+overflow-x: hidden;  
 }
 
   .scene {
@@ -305,11 +319,15 @@ overflow: hidden;
   .carousel__cell {
     width: 360px;
     height: 360px;
+    left: 50%;
+    top: 45%;
+
   }
 }
 </style>
 </head>
 <body>
+
 
 <div class="scene-clip">
   <div class="scene">
@@ -317,13 +335,43 @@ overflow: hidden;
   </div>
 </div>
 
+<div class="info">
+        <div>
+    <a href="https://www.instagram.com/s_h_i_n_d_i_g/">@s_h_i_n_d_i_g</a>
+    <p>shindig #7
+    <p>Doors 20:30 </p>
+    <p>18.04.2026</p>
+    <p>Kunstraum 34</p>
+        <address>
+            Filderstraße 34
+            70180 Stuttgart
+        </address>
+    </p>
+    <a href="https://www.kunstraum34.de">Kunstraum 34</a>
+    </div>
+    <div class="info-text">
+        <p>shindig number 7!! This time: Grand Piano, on the 18th of April, at Kunstraum 34, in Stuttgart, 8 PM!
+        
+        Pianist Mai Kawano will perform „Mass“, „Concerts“, and „I See“ by <a href="https://www.yuriumemoto.com/">Yuri Umemoto</a>, written for piano and fixed media. The program also includes „Lucid“ by Ben Nobuto and „djytb: Tutorial no. 1“ by <a href=""></a>ukas Beyer.
+        After the concert, Yuri Umemoto, Mai Kawano, and Lukas Beyer will play a DJ set together.
+        
+        Yuri Umemoto (b.2002) is a composer born in Tokyo. His music is built through notation, recording, and editing, often incorporating recorded voices and songs. He creates works ranging from stage performances to recordings. His practice spans classical and contemporary music/art, as well as club, experimental, ambient, and pop music scenes. Umemoto is currently in residence at @akademiesolitude.
+        
+        Mai Kawano (b. 2002) is a Frankfurt-based pianist. Grounded in classical music, she collaborates with composers of her generation and premieres new works. In her arrangements, she reinterprets existing materials and, through a refined sensitivity to instrumental approaches, explores memory and narrative.
+        
+        Ben Nobuto (b. 1996) is a British/Japanese composer, pianist and producer based in London. With a style described as ‘utterly contemporary’ (Manchester Collective) and ‘sonically dazzling’ (RPS Awards), his music explores themes of attention and fragmentation, drawing from internet culture and popular idioms in a playful, ironic and surreal manner. Often combining acoustic and electronic sounds, his interest lies in how processes from one can be applied to the other, and the relationship between the ‘human’ and ‘non-human’ in the context of a live performance.
+        
+        Lukas Beyer (b. 1997) is djytb, djytb is ____. For example, he turned an IKEA shelf into a sound system (Kallax Soundsystem, 2022), created a musical short film (Official Music Video, 2025), and understands concerts as performative propositions. His (capital m) Music was released by In Unison (Brussels) and 76666 (Karlsruhe).</p>
+
+    </div>
+</div>
+
    <div class="carousel-options">
-    <div class="wheel-container">
+    <!-- <div class="wheel-container">
         <input type="text" class="dial" value="0" data-width="150" data-height="150" 
                data-fgColor="#eee" data-bgColor="#fafafa" data-thickness="0.5" 
                data-min="0" data-max="15" data-displayInput="false" data-cursor="true" data-step="1">
-        <!-- <div class="wheel-display">1</div> -->
-    </div>
+    </div> -->
     
     <div class="carousel_sliders">
             <label>
