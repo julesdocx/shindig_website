@@ -6,25 +6,38 @@
 <title>3D Carousel</title>
 <style>
     *{box-sizing:border-box;}
-    body{
-        font-family:sans-serif;
-        text-align:center;
-        margin:0;
-        background:#fff;
-        padding-top: 80px;
-        overflow: hidden;
-    }
+body {
+  font-family: sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-    /* Scene – 3‑D context + grab cursors */
-    .scene{
-        margin:60px auto;
-        width:420px;
-        height:300px;
-        perspective:1100px;
-        position:relative;
-        cursor:grab;
-        user-select:none;
-    }
+.scene-clip {
+  width: 100vw;
+  /* overflow: hidden;    */
+  flex-shrink: 0;
+}
+
+.scene {
+    /* overflow: hidden; */
+  margin: 0 auto;
+  width: 420px;
+  height: 600px  ;
+  perspective: 1100px;
+  position: relative;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
     .scene.dragging{cursor:grabbing;}
 
     /* Carousel wrapper */
@@ -41,8 +54,8 @@
         position:absolute;
         user-select:none;
         cursor:pointer;
-        width:350px;
-        height:350px;
+        width:450px;
+        height:450px;
         left:50%;top:50%;
         transform:translate(-50%,-50%);
         line-height:200px;
@@ -54,7 +67,7 @@
 
     .carousel__cell img{
         height:100%;
-        object-fit:covain;
+        object-fit:contain;
         pointer-events:none;
     }
 
@@ -74,13 +87,22 @@
         pointer-events: none;
     }
 
-    /* Control panel */
-    .carousel-options{
-        margin:40px auto;
-        color:#333;
-        margin-top: 300px;
+.carousel-options {
+  margin: 16px auto 0;
+  color: #333;
+}
 
-    }
+.wheel-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
     .carousel-options label {
     display: block;
     text-align: left;
@@ -98,15 +120,14 @@
     margin:40px auto;
     color:#333;
 }
-
 .wheel-container {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    margin: 250px auto 40px;
-
-    align-items: center;
-    justify-content: center;
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .wheel-inner {
@@ -259,7 +280,8 @@
 }
 
 .carousel_sliders {
-    display: flex;
+        display: none;
+    /* display: flex; */
     position: absolute;
     justify-content: space-between;
     width: 100vw;
@@ -267,14 +289,33 @@
     bottom: 0px;
     margin: auto;
 }
+@media (max-width: 600px) {
+  .carousel_sliders {
+    display: none;
+  }
+  .scene-clip {
+overflow: hidden;  
+}
 
+  .scene {
+    width: 100vw;
+    height: 1200px;
+  }
+
+  .carousel__cell {
+    width: 360px;
+    height: 360px;
+  }
+}
 </style>
 </head>
 <body>
 
-    <div class="scene">
-        <div class="carousel" id="carousel-container"></div>
-    </div>
+<div class="scene-clip">
+  <div class="scene">
+    <div class="carousel" id="carousel-container"></div>
+  </div>
+</div>
 
    <div class="carousel-options">
     <div class="wheel-container">
@@ -310,15 +351,15 @@
 <script>
 // Pre-loaded imagesz
 const IMAGES = [
-    './poster-01.jpg',
-    './poster-02.jpg',
-    './poster-03.jpg',
-    './poster-04.jpg',
-    './poster-05.jpg',
-    './poster-06.jpg',
-    './poster-07.jpg',
-    './poster-08.jpg',
-    './poster-09.jpg'
+    './poster-01.jpeg',
+    './poster-02.jpeg',
+    './poster-03.jpeg',
+    './poster-04.jpeg',
+    './poster-05.jpeg',
+    './poster-06.jpeg',
+    './poster-07.jpeg',
+    './poster-08.jpeg',
+    './poster-09.jpeg'
 ];
 
 let carousel3D;
@@ -368,29 +409,33 @@ class Carousel3D{
         this.dragging   = false;
         this.dragStartX = 0;
 
-        this.CELL_SIZE   = 250;
-        this.BASE_GAP    = -30;
-        this.DEPTH_BASE  = -200;
-        this.DEPTH_STEP  = -20;
+        const isMobile = window.innerWidth <= 600;
+
+        this.CELL_SIZE  = isMobile ? 160 : 250;
+        this.BASE_GAP   = isMobile ? -20 : -30;
+        this.DEPTH_BASE = isMobile ? -100 : -100;
+        this.DEPTH_STEP = isMobile ? -20 : -20;
 
         this.init();
     }
 
     init(){
         this.cells.forEach((cell,idx)=>cell.addEventListener('click',()=>this.centerCell(idx)));
-        this.scene.addEventListener('pointerdown',this.onPointerDown.bind(this));
-        this.scene.addEventListener('pointermove',this.onPointerMove.bind(this));
-        this.scene.addEventListener('pointerup',  this.onPointerUp.bind(this));
-        this.scene.addEventListener('pointerleave',this.onPointerUp.bind(this));
-
+        this.scene.addEventListener('pointerdown', this.onPointerDown.bind(this));
+        this.scene.addEventListener('pointermove', this.onPointerMove.bind(this));
+        document.addEventListener('pointerup',    this.onPointerUp.bind(this));  // ← was scene + pointerleave
         this.render();
     }
 
-    onPointerDown(e){this.dragging=true;this.dragStartX=e.clientX;this.scene.classList.add('dragging');}
+    onPointerDown(e){
+        e.preventDefault();  // ← add
+        this.dragging=true; this.dragStartX=e.clientX; this.scene.classList.add('dragging');
+    }
     onPointerMove(e){
-        if(!this.dragging)return;
-        const dx=e.clientX-this.dragStartX,THRESHOLD=25;
-        if(Math.abs(dx)>=THRESHOLD){dx>0?this.rotate('prev'):this.rotate('next');this.dragStartX=e.clientX;}
+        if(!this.dragging) return;
+        e.preventDefault();  // ← add
+        const dx=e.clientX-this.dragStartX, THRESHOLD=25;
+        if(Math.abs(dx)>=THRESHOLD){ dx>0?this.rotate('prev'):this.rotate('next'); this.dragStartX=e.clientX; }
     }
     onPointerUp(){this.dragging=false;this.scene.classList.remove('dragging');}
 
